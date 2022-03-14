@@ -16,7 +16,7 @@ Utilise Google Admob Ads (banners, interstitial, and rewarded videos) in your Xa
 
 ### To add a banner in your project
 
-To add a Banner on a page you have two options:
+Two options are available for adding banner ads to your app
 
 #### 1) XAML
 
@@ -88,17 +88,44 @@ iOS: ca-app-pub-3940256099942544/6978759866
 
 ### Global Properties
 
-IsEnabled (default: true): true / false - enables or disables the loading / displaying of ads
-AdUnitId: Ad Unit Id to be used for all MgBannerAdViews, can be overridden by setting the AdUnitId on the MgBannerAdView control
-UsePersonalisedAds (default: false): true / false - used to influence whether Google Ads uses personalised ads or generic ads
-UseRestrictedDataProcessing (default: true): true / false - TODO
-ComplyWithFamilyPolicies (default: true): true / false - specify whether Google Ads should comply with Family Policies
-TagForChildDirectedTreatment (default: TreatmentUnspecified): MgTagForChildDirectedTreatment enum - TODO
-TagForUnderAgeOfConsent (default: ConsentUnspecified): MgTagForUnderAgeOfConsent enum - TODO
-MaxAdContentRating (default: RatingG): MgMaxAdContentRating enum - maximum rating that displayed ads can be
-TestDevices: list of string entries representing test device ids
+#### IsEnabled 
+	
+(default: true): true / false - enables or disables the loading / displaying of ads
+	
+#### AdUnitId 
+	
+(default: null): Ad Unit Id to be used for all MgBannerAdViews, can be overridden by setting the AdUnitId on the MgBannerAdView control
+	
+#### UsePersonalisedAds
+	
+(default: false): true / false - used to influence whether Google Ads uses personalised ads or generic ads
+
+#### UseRestrictedDataProcessing
+
+(default: true): true / false - TODO
+	
+#### ComplyWithFamilyPolicies
+
+(default: true): true / false - specify whether Google Ads should comply with Family Policies
+	
+#### TagForChildDirectedTreatment
+
+(default: TreatmentUnspecified): MgTagForChildDirectedTreatment enum - TODO
+	
+#### TagForUnderAgeOfConsent
+
+(default: ConsentUnspecified): MgTagForUnderAgeOfConsent enum - TODO
+	
+#### MaxAdContentRating
+	
+(default: RatingG): MgMaxAdContentRating enum - maximum rating that displayed ads can be
+	
+#### TestDevices
+
+(default: empty list): list of string entries representing test device ids
 
 Global properties can be used as shown below:
+	
 ```csharp
 CrossMgAdmob.Current.TagForChildDirectedTreatment = MgTagForChildDirectedTreatment.TreatmentUnspecified;
 CrossMgAdmob.Current.TagForUnderAgeOfConsent = MgTagForUnderAgeOfConsent.ConsentUnspecified;
