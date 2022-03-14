@@ -3,7 +3,7 @@
 Utilise Google Admob Ads (banners, interstitial, and rewarded videos) in your Xamarin Projects (Android and iOS)
 
 ## Setup
-* Available on Nuget: TODO
+* Available on Nuget: https://www.nuget.org/packages/Plugin.MgAdmob/
 * Install in your .NetStandard project and Android/iOS projects
 
 #### This plugin supports:
