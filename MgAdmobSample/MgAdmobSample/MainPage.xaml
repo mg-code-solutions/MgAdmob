@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+   xmlns="http://xamarin.com/schemas/2014/forms"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:controls="clr-namespace:Plugin.MgAdmob.Controls;assembly=Plugin.MgAdmob"
+   x:Class="MgAdmobSample.MainPage"
+   xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+   ios:Page.UseSafeArea="true"
+   Padding="{OnPlatform iOS='0,20,0,0'}"
+   >
+
+
+<StackLayout Spacing="5" Orientation="Vertical">
+
+      <Label Text="Banner Ad"/>
+
+      <controls:MgBannerAdView
+         BackgroundColor="Red"
+         AdUnitId="{OnPlatform Android='ca-app-pub-3940256099942544/6300978111', iOS='ca-app-pub-3940256099942544/2934735716'}"
+         AdFailedToLoad="MgBannerAdView_OnAdFailedToLoad"
+       />
+
+      <Button Text="Interstitial Ad" Clicked="InterstitialButtonClicked"/>
+      <Button Text="Reward Video Ad" Clicked="RewardVideoAdButtonClicked"/>
+   </StackLayout>
+
+</ContentPage>

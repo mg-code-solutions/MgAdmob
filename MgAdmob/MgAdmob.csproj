@@ -1,0 +1,97 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;xamarinios10;monoandroid10.0;monoandroid12.0;</TargetFrameworks>
+
+		<DesignTimeBuild>false</DesignTimeBuild>
+
+		<AssemblyName>Plugin.MgAdmob</AssemblyName>
+		<RootNamespace>Plugin.MgAdmob</RootNamespace>
+		<PackageId>Plugin.MgAdmob</PackageId>
+
+		<Product>$(AssemblyName) ($(TargetFramework))</Product>
+		<AssemblyVersion>0.0.1.0</AssemblyVersion>
+		<AssemblyFileVersion>0.0.1.0</AssemblyFileVersion>
+		<Version>0.0.1</Version>
+		<PackageVersion>0.0.1.0</PackageVersion>
+
+
+
+		<UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>latest</LangVersion>
+		<DebugType>portable</DebugType>
+		<DefineConstants>$(DefineConstants);</DefineConstants>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+		<PackageReleaseNotes>
+			Initial Release
+		</PackageReleaseNotes>
+
+		<PackageIconUrl>ICON URL</PackageIconUrl>
+		<PackageTags>xamarin, xamarin.forms, android, ios, plugin, MgAdmob, ads, admob, banner, insterstitial, rewarded video, google, google ads, google admob</PackageTags>
+
+		<Title>MgAdmob Plugin for Xamarin (Android, iOS)</Title>
+		<Summary>Utilise Goodle Ads (banner, insterstitial, and rewarded video) in Xamarin (Android, iOS) projects</Summary>
+		<Description>A simple plugin to utilise Google Ads (banner, insterstitial, and rewarded video) in Xamarin (Android, iOS) projects</Description>
+
+
+		<Owners>M G</Owners>
+		<Authors>M G</Authors>
+		<Copyright>Copyright 2022</Copyright>
+		
+		<DisableExtraReferences>true</DisableExtraReferences>
+
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+		<PackOnBuild>false</PackOnBuild>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+		<PackOnBuild>true</PackOnBuild>
+		<DebugType>portable</DebugType>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+
+
+	<ItemGroup>
+		<Compile Include="**\*.shared.cs" />
+	</ItemGroup>
+	
+	
+    <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+    </ItemGroup>
+
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('monoandroid')) ">
+		<Compile Include="**\*.android.cs" />		
+		<PackageReference Include="Xamarin.GooglePlayServices.Ads" Version="120.3.0.3" />
+	</ItemGroup>
+	
+
+	<ItemGroup Condition=" $(TargetFramework.StartsWith('xamarinios')) ">
+		<Compile Include="**\*.apple.cs" />
+		<PackageReference Include="Xamarin.Google.iOS.MobileAds" Version="8.13.0" />
+	</ItemGroup>
+	
+	
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
+	</ItemGroup>
+	
+
+
+	<Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
+
+</Project>

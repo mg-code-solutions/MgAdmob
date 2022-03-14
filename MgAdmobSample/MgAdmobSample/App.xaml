@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Plugin.MgAdmob.Controls;assembly=Plugin.MgAdmob"
+             x:Class="MgAdmobSample.App">
+    <Application.Resources>
+
+       <Style TargetType="controls:MgBannerAdView">
+
+          <Setter Property="HeightRequest">
+             <Setter.Value>
+                <x:OnIdiom Phone="60" Tablet="90"/>
+             </Setter.Value>
+          </Setter>
+
+       </Style>
+
+   </Application.Resources>
+</Application>
