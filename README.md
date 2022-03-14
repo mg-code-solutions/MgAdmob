@@ -259,6 +259,7 @@ Add the following to **AndroidManifest.xml** (between the **<application></appli
 Also, select the following permissions to the Android project properties:
 
 ACCESS_NETWORK_STATE
+
 INTERNET
 
 Alternative, add the following entries directly to **AndroidManifest.xml** (typically after the **<application></application>** tags):
