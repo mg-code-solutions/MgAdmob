@@ -1,4 +1,4 @@
-### MgAdmob plugin for Xamarin (Android & iOS)
+# MgAdmob plugin for Xamarin (Android & iOS)
 
 Utilise Google Admob Ads (banners, interstitial, and rewarded videos) in your Xamarin Projects (Android and iOS)
 
@@ -45,25 +45,25 @@ Alternatively, for all banners in your app you can set the AdUnitId property via
 MgBannerAdView ads = new MgBannerAdView();
 ```
 
-#### Important
+### Ad Unit Ids
 
 When testing, use the following Ad Unit Ids, provided by Google. When releasing to production, replace the test Ad Unit Ids with your own Ids:
 
-## Banner Ad Test Ids
+#### Banner Ad Test Ids
 
 ```csharp
 Android: ca-app-pub-3940256099942544/6300978111
 iOS: ca-app-pub-3940256099942544/2934735716
 ```
 
-## Interstitial Ad Test Ids
+#### Interstitial Ad Test Ids
 
 ```csharp
 Android: ca-app-pub-3940256099942544/1033173712
 iOS: ca-app-pub-3940256099942544/4411468910
 ```
 
-## Interstitial Ad Test Ids
+#### Interstitial Ad Test Ids
 
 ```csharp
 Android: ca-app-pub-3940256099942544/5224354917
@@ -84,11 +84,7 @@ iOS: ca-app-pub-3940256099942544/6978759866
 </Style>
 ```
 
-### Properties
-
-For each MgBannerAdView, you can set the Ad Unit Id to specify the ads to load:
-
-AdUnitId: Set this to the Ad Unit Id from Google AdMob
+## Properties
 
 ### Global Properties
 
@@ -102,7 +98,6 @@ TagForUnderAgeOfConsent (default: ConsentUnspecified): MgTagForUnderAgeOfConsent
 MaxAdContentRating (default: RatingG): MgMaxAdContentRating enum - maximum rating that displayed ads can be
 TestDevices: list of string entries representing test device ids
 
-
 Global properties can be used as shown below:
 ```csharp
 CrossMgAdmob.Current.TagForChildDirectedTreatment = MgTagForChildDirectedTreatment.TreatmentUnspecified;
@@ -113,7 +108,15 @@ CrossMgAdmob.Current.ComplyWithFamilyPolicies = true;
 CrossMgAdmob.Current.UseRestrictedDataProcessing = true;
 ```
 
-### Interstitial
+### MgBannerAdView Properties
+	
+MgBannerAdView allows you to set the Ad Unit Id to specify the ads to load:
+
+AdUnitId: Set this to the Ad Unit Id from Google AdMob
+
+## How to Use MgAdMob
+	
+### Interstitial ads
 
 To load an Interstitial Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
 ```csharp
@@ -127,7 +130,7 @@ CrossMgAdmob.Current.ShowInterstitial();
 
 **NB: Intersitial Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
 
-### Rewarded video
+### Rewarded video ads
 
 To load a Reqard Video Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
 ```csharp
@@ -141,7 +144,9 @@ CrossMgAdmob.Current.ShowRewardedVideo();
 
 **NB: Reward Video Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
 
-### Events for MgBannerAdView
+## Events
+	
+### MgBannerAdView
 
 ```csharp
 AdClicked
@@ -152,9 +157,8 @@ AdFailedToLoad
 AdLoaded
 ```
 
-### Events for Interstitial Ads
+### Interstitial Ads
 
-the Interstitial ads offer 3 events:
 ```csharp
 InterstitialLoaded
 InterstitialClosed
@@ -164,9 +168,8 @@ InterstitialFailedToLoad
 InterstitialFailedToShow
 ```
 
-### Events for Rewarded Video Ads
+### Rewarded Video Ads
 
-The Rewarded Videos offer 7 events:
 ```csharp
 RewardedVideoAdLoaded
 RewardedVideoAdClosed
@@ -179,7 +182,9 @@ RewardedVideoStarted
 Rewarded
 ```
 
-### Important
+## Important Configuration
+
+### Code
 
 Remember to include the MgAdmob library with this code (usually added automatically):
 
@@ -187,7 +192,15 @@ Remember to include the MgAdmob library with this code (usually added automatica
 using Plugin.MgAdmob;
 ```
 
-### Important for Android
+### XAML
+
+Add the following to any XAML file you wish to use MgAdmob in
+	
+```csharp
+xmlns:controls="clr-namespace:Plugin.MgAdmob.Controls;assembly=Plugin.MgAdmob"
+```
+
+### Android
 
 The Mobile Ads SDK must be initialised before use. This can be done by calling MobileAds.Initialize(ApplicationContext) in the OnCreate() method for your MainActivity.cs:
 
@@ -229,7 +242,7 @@ If your Ads are not being displayed in the Android Emulator, make sure the Emula
 
 [GooglePlayServicesUtil] Google Play Store is missing.
 
-### IMPORTANT FOR IOS:
+### iOS:
 
 The Mobile Ads SDK must be initialised before use. This can be done by calling MobileAds.SharedInstance.Start() in the FinishedLaunching() method for your AppDelegate.cs:
 
