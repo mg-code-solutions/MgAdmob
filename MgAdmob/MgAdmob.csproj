@@ -39,12 +39,16 @@
 
 
 		<Owners>M G</Owners>
-		<Authors>M G</Authors>
+		<Authors>MG Code Solutions</Authors>
 		<Copyright>Copyright 2022</Copyright>
 		
 		<DisableExtraReferences>true</DisableExtraReferences>
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+		<PackageProjectUrl>https://github.com/mg-code-solutions/MgAdmob</PackageProjectUrl>
+
+		<RepositoryType>git</RepositoryType>
 
 	</PropertyGroup>
 
