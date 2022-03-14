@@ -139,9 +139,11 @@ CrossMgAdmob.Current.UseRestrictedDataProcessing = true;
 	
 MgBannerAdView allows you to set the Ad Unit Id to specify the ads to load:
 
-AdUnitId: Set this to the Ad Unit Id from Google AdMob
+#### AdUnitId
+	
+(default: null): Set this to the Ad Unit Id from Google AdMob
 
-## How to Use MgAdMob
+## How to Use MgAdMob Full Screen Ads
 	
 ### Interstitial ads
 
@@ -229,7 +231,7 @@ xmlns:controls="clr-namespace:Plugin.MgAdmob.Controls;assembly=Plugin.MgAdmob"
 
 ### Android
 
-The Mobile Ads SDK must be initialised before use. This can be done by calling MobileAds.Initialize(ApplicationContext) in the OnCreate() method for your MainActivity.cs:
+The Mobile Ads SDK must be initialised before use. This can be done by calling **MobileAds.Initialize(ApplicationContext)** in the **OnCreate()** method for your **MainActivity** class:
 
 ```csharp
 protected override void OnCreate(Bundle savedInstanceState)
@@ -247,10 +249,10 @@ protected override void OnCreate(Bundle savedInstanceState)
 }
 ```
 
-Add the following to AppManifest.xml (between the <application></application> tags):
+Add the following to **AndroidManifest.xml** (between the **<application></application>** tags). Also remembering to replace **ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy** with your project id from Google Admob:
 
 ```csharp
-<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-1224013205445908~5102979875" />
+<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy" />
 <activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" />
 ```
 
@@ -259,19 +261,19 @@ Also, select the following permissions to the Android project properties:
 ACCESS_NETWORK_STATE
 INTERNET
 
-Alternative, add the following entries directly to AndroidManifest.xml (after the <application></application> tags):
+Alternative, add the following entries directly to **AndroidManifest.xml** (typically after the **<application></application>** tags):
 ```csharp
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-If your Ads are not being displayed in the Android Emulator, make sure the Emulator was created with Google APIs selected, otherwise you'll find this message in your Debugger Console:
+If your Ads are not being displayed in the Android Emulator, make sure the Emulator was created with **Google APIs** selected, otherwise you'll find this message in your Debugger Console:
 
 [GooglePlayServicesUtil] Google Play Store is missing.
 
 ### iOS:
 
-The Mobile Ads SDK must be initialised before use. This can be done by calling MobileAds.SharedInstance.Start() in the FinishedLaunching() method for your AppDelegate.cs:
+The Mobile Ads SDK must be initialised before use. This can be done by calling **MobileAds.SharedInstance.Start()** in the **FinishedLaunching()** method for your **AppDelegate** class:
 
 ```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options)
@@ -290,7 +292,7 @@ private void CompletionHandler(InitializationStatus status)
 }
 ```
 
-Edit your info.plist, and add the the following keys (remembering to replace ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy with your project id from Google Admob):
+Edit your **info.plist**, and add the the following keys (remembering to replace **ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy** with your project id from Google Admob):
 
 ```csharp
 <key>GADApplicationIdentifier</key>
