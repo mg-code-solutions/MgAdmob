@@ -256,7 +256,7 @@ Add the following to **AndroidManifest.xml** (between the **<application></appli
 <activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" />
 ```
 
-Also, select the following permissions to the Android project properties:
+Also, select the following permissions in the Android project properties:
 
 ACCESS_NETWORK_STATE
 
