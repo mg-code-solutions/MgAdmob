@@ -127,10 +127,7 @@ public class MgAdmobImplementation : IMgAdmob
       return request;
    }
 
-   public bool IsInterstitialLoaded()
-   {
-      return _interstitialService.IsLoaded();
-   }
+   public bool IsInterstitialLoaded => _interstitialService.IsLoaded;
 
    public void LoadInterstitial(string adUnitId)
    {
@@ -142,10 +139,7 @@ public class MgAdmobImplementation : IMgAdmob
       _interstitialService.ShowInterstitial();
    }
 
-   public bool IsRewardedVideoLoaded()
-   {
-      return _rewardService.IsLoaded();
-   }
+   public bool IsRewardedVideoLoaded => _rewardService.IsLoaded;
 
    public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/)
    {

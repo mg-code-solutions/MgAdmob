@@ -15,7 +15,7 @@ public class MgRewardedFullScreenContentCallback : FullScreenContentCallback
    public override void OnAdDismissedFullScreenContent()
    {
       base.OnAdDismissedFullScreenContent();
-
+      
       _implementation.OnRewardedVideoAdClosed();
    }
 

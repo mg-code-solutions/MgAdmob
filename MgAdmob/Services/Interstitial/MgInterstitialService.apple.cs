@@ -99,7 +99,7 @@ internal class MgInterstitialService
          return;
       }
 
-      if (!IsLoaded())
+      if (!IsLoaded)
       {
          throw new ApplicationException("Interstitial Ad not loaded, call LoadInterstitial() first");
       }
@@ -118,11 +118,6 @@ internal class MgInterstitialService
       }
    }
 
-   internal bool IsLoaded()
-   {
-      return _interstitialAd != null;
-   }
-
-
+   public bool IsLoaded => _interstitialAd != null;
 }
 

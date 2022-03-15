@@ -18,10 +18,7 @@ internal class MgRewardService
 
    }
 
-   public bool IsLoaded()
-   {
-      return _rewardedAd != null;
-   }
+   public bool IsLoaded => _rewardedAd != null;
 
 
    private void CreateRewardAd(string adUnitId)
@@ -59,6 +56,14 @@ internal class MgRewardService
 
       _implementation.OnRewardedVideoAdLoaded();
    }
+   
+   private void UnbindRewardEvents()
+   {
+      _rewardedAd.DismissedContent -= RewardedAdOnDismissedContent;
+      _rewardedAd.FailedToPresentContent -= RewardedAdOnFailedToPresentContent;
+      _rewardedAd.PresentedContent -= RewardedAdOnPresentedContent;
+      _rewardedAd.RecordedImpression -= RewardedAdOnRecordedImpression;
+   }
 
    private void RewardedAdOnRecordedImpression(object sender, System.EventArgs e)
    {
@@ -80,15 +85,7 @@ internal class MgRewardService
 
       _rewardedAd = null;
    }
-
-   private void UnbindRewardEvents()
-   {
-      _rewardedAd.DismissedContent -= RewardedAdOnDismissedContent;
-      _rewardedAd.FailedToPresentContent -= RewardedAdOnFailedToPresentContent;
-      _rewardedAd.PresentedContent -= RewardedAdOnPresentedContent;
-      _rewardedAd.RecordedImpression -= RewardedAdOnRecordedImpression;
-   }
-
+   
    private void RewardedAdOnDismissedContent(object sender, System.EventArgs e)
    {
       _implementation.OnRewardedVideoAdClosed();
@@ -115,9 +112,9 @@ internal class MgRewardService
          return;
       }
 
-      if (!IsLoaded())
+      if (!IsLoaded)
       {
-         throw new ApplicationException("RewardAd not loaded, call LoadRewardedVideo()");
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardedVideo)}()");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;

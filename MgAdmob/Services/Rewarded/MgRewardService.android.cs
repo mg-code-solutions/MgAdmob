@@ -7,86 +7,83 @@ using Xamarin.Forms.Platform.Android;
 
 namespace Plugin.MgAdmob.Services.Rewarded;
 
-   public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener
+public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener
+{
+   private RewardedAd _rewardedAd;
+   private readonly MgAdmobImplementation _implementation;
+
+   public MgRewardService(MgAdmobImplementation implementation)
    {
-      private RewardedAd _rewardedAd;
-      private readonly MgAdmobImplementation _implementation;
-
-      public MgRewardService(MgAdmobImplementation implementation)
+      _implementation = implementation;
+   }
+   
+   private void CreateRewardAd(string adUnitId)
+   {
+      if (!CrossMgAdmob.Current.IsEnabled)
       {
-         _implementation = implementation;
+         return;
       }
 
-      private void CreateRewardAd(string adUnitId)
+      var context = Android.App.Application.Context;
+      var requestBuilder = MgAdmobImplementation.GetRequest();
+
+      MgRewardedAd.Load(context, adUnitId, requestBuilder.Build(), this);
+   }
+
+   public void LoadRewardVideo(string adUnitId)
+   {
+      if (!CrossMgAdmob.Current.IsEnabled)
       {
-         if (!CrossMgAdmob.Current.IsEnabled)
-         {
-            return;
-         }
-
-         var context = Android.App.Application.Context;
-         var requestBuilder = MgAdmobImplementation.GetRequest();
-
-         MgRewardedAd.Load(context, adUnitId, requestBuilder.Build(), this);
+         return;
       }
 
-      public void LoadReward(string adUnitId)
-      {
-         if (!CrossMgAdmob.Current.IsEnabled)
-         {
-            return;
-         }
+      CreateRewardAd(adUnitId);
+   }
 
-         CreateRewardAd(adUnitId);
+   public bool IsLoaded => _rewardedAd != null;
+
+   public void ShowReward()
+   {
+      if (!CrossMgAdmob.Current.IsEnabled)
+      {
+         return;
       }
 
-      public bool IsLoaded()
+      if (_rewardedAd != null)
       {
-         return _rewardedAd != null;
-      }
-
-      public void ShowReward()
-      {
-         if (!CrossMgAdmob.Current.IsEnabled)
-         {
-            return;
-         }
-
-         if (_rewardedAd != null)
-         {
-            _rewardedAd.Show(Android.App.Application.Context.GetActivity(), this);
-
-            _rewardedAd = null;
-         }
-         else
-         {
-            throw new ApplicationException("Reward Ad not loaded, call LoadReward() first");
-         }
-      }
-
-      public override void OnAdFailedToLoad(LoadAdError error)
-      {
-         base.OnAdFailedToLoad(error);
-
-         _implementation.OnRewardedVideoAdFailedToLoad(error);
+         _rewardedAd.Show(Android.App.Application.Context.GetActivity(), this);
 
          _rewardedAd = null;
       }
-
-      public override void OnRewardedAdLoaded(RewardedAd rewardedAd)
+      else
       {
-         base.OnRewardedAdLoaded(rewardedAd);
-
-         _rewardedAd = rewardedAd;
-
-         _rewardedAd.FullScreenContentCallback = new MgRewardedFullScreenContentCallback(_implementation);
-
-         _implementation.OnRewardedVideoAdLoaded();
-      }
-
-      public void OnUserEarnedReward(IRewardItem rewardItem)
-      {
-         _implementation.OnRewarded(rewardItem);
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardVideo)}() first");
       }
    }
+
+   public override void OnAdFailedToLoad(LoadAdError error)
+   {
+      base.OnAdFailedToLoad(error);
+
+      _implementation.OnRewardedVideoAdFailedToLoad(error);
+
+      _rewardedAd = null;
+   }
+
+   public override void OnRewardedAdLoaded(RewardedAd rewardedAd)
+   {
+      base.OnRewardedAdLoaded(rewardedAd);
+
+      _rewardedAd = rewardedAd;
+
+      _rewardedAd.FullScreenContentCallback = new MgRewardedFullScreenContentCallback(_implementation);
+
+      _implementation.OnRewardedVideoAdLoaded();
+   }
+
+   public void OnUserEarnedReward(IRewardItem rewardItem)
+   {
+      _implementation.OnRewarded(rewardItem);
+   }
+}
 

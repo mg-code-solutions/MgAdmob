@@ -42,10 +42,9 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       CreateInterstitialAd(adUnit);
    }
 
-   public bool IsLoaded()
-   {
-      return _interstitialAd != null;
-   }
+   public bool IsLoaded => _interstitialAd != null;
+
+
 
    public void ShowInterstitial()
    {
@@ -54,7 +53,7 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
          return;
       }
 
-      if (_interstitialAd != null)
+      if (!IsLoaded)
       {
          _interstitialAd.Show(Android.App.Application.Context.GetActivity());
 

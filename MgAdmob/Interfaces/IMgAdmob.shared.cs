@@ -18,10 +18,10 @@ public interface IMgAdmob
    MgMaxAdContentRating MaxAdContentRating { get; set; }
    List<string> TestDevices { get; set; }
 
-   bool IsInterstitialLoaded();
+   bool IsInterstitialLoaded { get; }
    void LoadInterstitial(string adUnitId);
    void ShowInterstitial();
-   bool IsRewardedVideoLoaded();
+   bool IsRewardedVideoLoaded { get; }
    public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/);
    void ShowRewardedVideo();
    string GetAdContentRatingString();
