@@ -34,7 +34,7 @@ namespace MgAdmobSample
 
          if (Device.RuntimePlatform == Device.iOS)
          {
-            CrossMgAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/6978759866");
+            CrossMgAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/1712485313");
          }
 
       }

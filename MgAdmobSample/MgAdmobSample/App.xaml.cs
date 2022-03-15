@@ -117,13 +117,13 @@ namespace MgAdmobSample
 
       private void OnRewardedVideoAdFailedToLoad(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnRewardedVideoAdFailedToLoad");
+         Debug.WriteLine($"--------> OnRewardedVideoAdFailedToLoad: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }
 
 
       private void OnRewardedVideoAdFailedToShow(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnRewardedVideoAdFailedToShow");
+         Debug.WriteLine($"--------> OnRewardedVideoAdFailedToShow: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }
 
       private void OnRewardedVideoAdClosed(object sender, EventArgs e)
@@ -139,12 +139,14 @@ namespace MgAdmobSample
 
       private void OnInterstitialFailedToShow(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnInterstitialFailedToShow");
+         Debug.WriteLine($"--------> OnInterstitialFailedToShow: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
+
       }
 
       private void OnInterstitialFailedToLoad(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnInterstitialFailedToLoad");
+         Debug.WriteLine($"--------> OnInterstitialFailedToLoad: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
+
       }
 
       private void OnInterstitialImpression(object sender, EventArgs e)
