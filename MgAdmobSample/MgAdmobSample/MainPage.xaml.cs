@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Plugin.MgAdmob;
 using Plugin.MgAdmob.EventArgs;
 using Xamarin.Forms;
@@ -39,12 +34,12 @@ namespace MgAdmobSample
 
          if (Device.RuntimePlatform == Device.iOS)
          {
-            CrossMgAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/6978759866");
+            CrossMgAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/1712485313");
          }
 
       }
 
-      private void MgBannerAdView_OnAdFailedToLoad(object sender, MgAdmobEventArgs e)
+      private void MgBannerAdView_OnAdFailedToLoad(object sender, MgErrorEventArgs e)
       {
          Console.WriteLine($"Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }

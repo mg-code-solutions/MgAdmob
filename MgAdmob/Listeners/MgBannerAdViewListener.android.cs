@@ -10,7 +10,7 @@ public class MgBannerAdViewListener : AdListener
    public event EventHandler AdClosed;
    public event EventHandler AdImpression;
    public event EventHandler AdOpened;
-   public event EventHandler<MgAdmobEventArgs> AdFailedToLoad;
+   public event EventHandler<MgErrorEventArgs> AdFailedToLoad;
    public event EventHandler AdLoaded;
 
    public override void OnAdClicked()
@@ -59,7 +59,7 @@ public class MgBannerAdViewListener : AdListener
             break;
       }
 
-      AdFailedToLoad?.Invoke(this, new MgAdmobEventArgs { ErrorCode = adError.Code, ErrorMessage = errorMessage });
+      AdFailedToLoad?.Invoke(this, new MgErrorEventArgs { ErrorCode = adError.Code, ErrorMessage = errorMessage });
    }
    
    public override void OnAdLoaded()

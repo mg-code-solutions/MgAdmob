@@ -51,16 +51,16 @@ public abstract class MgInterstitialAdLoadCallback : AdLoadCallback
    {
       if (_onAdLoadedCallback is null)
       {
-         _onAdLoadedCallback = JNINativeWrapper.CreateDelegate(n_onAdLoaded);
+         _onAdLoadedCallback = JNINativeWrapper.CreateDelegate(NativeOnAdLoaded);
       }
 
       return _onAdLoadedCallback;
    }
 
-   private static void n_onAdLoaded(IntPtr jnienv, IntPtr native__this, IntPtr native_p0)
+   private static void NativeOnAdLoaded(IntPtr jniEnv, IntPtr nativeThis, IntPtr nativePtr)
    {
-      var callback = GetObject<MgInterstitialAdLoadCallback>(jnienv, native__this, JniHandleOwnership.DoNotTransfer);
-      var interstitialAd = GetObject<Interstitial.InterstitialAd>(native_p0, JniHandleOwnership.DoNotTransfer);
+      var callback = GetObject<MgInterstitialAdLoadCallback>(jniEnv, nativeThis, JniHandleOwnership.DoNotTransfer);
+      var interstitialAd = GetObject<Interstitial.InterstitialAd>(nativePtr, JniHandleOwnership.DoNotTransfer);
 
       callback!.OnInterstitialAdLoaded(interstitialAd);
    }

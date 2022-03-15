@@ -2,17 +2,18 @@
 using Android.Gms.Ads;
 using Android.Gms.Ads.Hack;
 using Android.Gms.Ads.Interstitial;
+using Plugin.MgAdmob.Implementations;
 using Xamarin.Forms.Platform.Android;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Interstitial;
 
-public class InterstitialService : MgInterstitialAdLoadCallback
+public class MgInterstitialService : MgInterstitialAdLoadCallback
 {
    private InterstitialAd _interstitialAd;
 
    private readonly MgAdmobImplementation _implementation;
 
-   public InterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
@@ -41,10 +42,9 @@ public class InterstitialService : MgInterstitialAdLoadCallback
       CreateInterstitialAd(adUnit);
    }
 
-   public bool IsLoaded()
-   {
-      return _interstitialAd != null;
-   }
+   public bool IsLoaded => _interstitialAd != null;
+
+
 
    public void ShowInterstitial()
    {
@@ -53,16 +53,14 @@ public class InterstitialService : MgInterstitialAdLoadCallback
          return;
       }
 
-      if (_interstitialAd != null)
+      if (!IsLoaded)
       {
-         _interstitialAd.Show(Android.App.Application.Context.GetActivity());
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
+      }
 
-         _interstitialAd = null;
-      }
-      else
-      {
-         throw new ApplicationException("Interstitial Ad not loaded, call LoadInterstitial() first");
-      }
+      _interstitialAd.Show(Android.App.Application.Context.GetActivity());
+
+      _interstitialAd = null;
    }
 
    public override void OnInterstitialAdLoaded(InterstitialAd interstitialAd)
@@ -71,11 +69,11 @@ public class InterstitialService : MgInterstitialAdLoadCallback
 
       _interstitialAd = interstitialAd;
 
-      _interstitialAd.FullScreenContentCallback = new MgFullScreenContentCallback(_implementation, true);
-      
+      _interstitialAd.FullScreenContentCallback = new MgInterstitialFullScreenContentCallback(_implementation);
+
       _implementation.OnInterstitialLoaded();
    }
-   
+
    public override void OnAdFailedToLoad(LoadAdError error)
    {
       base.OnAdFailedToLoad(error);

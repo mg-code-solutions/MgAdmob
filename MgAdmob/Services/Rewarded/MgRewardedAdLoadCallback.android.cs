@@ -14,7 +14,7 @@ public abstract class MgRewardedAdLoadCallback : AdLoadCallback
 
    // ReSharper disable once InconsistentNaming
    // ReSharper disable once UnusedMember.Local
-   private static IntPtr class_ref => Members.JniPeerType.PeerReference.Handle;
+   private static IntPtr ClassRef => Members.JniPeerType.PeerReference.Handle;
 
    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
    [EditorBrowsable(EditorBrowsableState.Never)]

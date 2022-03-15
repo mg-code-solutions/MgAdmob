@@ -4,7 +4,6 @@ using System.Diagnostics;
 using Plugin.MgAdmob;
 using Plugin.MgAdmob.Enums;
 using Plugin.MgAdmob.EventArgs;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MgAdmobSample
@@ -25,7 +24,7 @@ namespace MgAdmobSample
          CrossMgAdmob.Current.TagForChildDirectedTreatment = MgTagForChildDirectedTreatment.TreatmentUnspecified;
          CrossMgAdmob.Current.TagForUnderAgeOfConsent = MgTagForUnderAgeOfConsent.ConsentUnspecified;
          CrossMgAdmob.Current.MaxAdContentRating = MgMaxAdContentRating.RatingG;
-         CrossMgAdmob.Current.UsePersonalizedAds = true;
+         CrossMgAdmob.Current.UsePersonalisedAds = true;
          CrossMgAdmob.Current.ComplyWithFamilyPolicies = true;
          CrossMgAdmob.Current.UseRestrictedDataProcessing = true;
 
@@ -39,8 +38,6 @@ namespace MgAdmobSample
          {
             CrossMgAdmob.Current.TestDevices = new List<string> { "7751cbfe52a595ea6b3bf5733dee4d4d" };
          }
-         
-
       }
 
       private void BindAdMobEvents()
@@ -61,10 +58,11 @@ namespace MgAdmobSample
          CrossMgAdmob.Current.RewardedVideoAdLeftApplication += OnRewardedVideoAdLeftApplication;
          CrossMgAdmob.Current.RewardedVideoAdOpened += OnRewardedVideoAdOpened;
          CrossMgAdmob.Current.RewardedVideoStarted += OnRewardedVideoStarted;
+         CrossMgAdmob.Current.RewardedVideoAdImpression += OnRewardedVideoAdImpression;
 
          CrossMgAdmob.Current.Rewarded += OnRewarded;
       }
-      
+
       private void UnbindAdMobEvents()
       {
          CrossMgAdmob.Current.InterstitialLoaded -= OnInterstitialLoaded;
@@ -82,12 +80,17 @@ namespace MgAdmobSample
          CrossMgAdmob.Current.RewardedVideoAdLeftApplication -= OnRewardedVideoAdLeftApplication;
          CrossMgAdmob.Current.RewardedVideoAdOpened -= OnRewardedVideoAdOpened;
          CrossMgAdmob.Current.RewardedVideoStarted -= OnRewardedVideoStarted;
+         CrossMgAdmob.Current.RewardedVideoAdImpression -= OnRewardedVideoAdImpression;
 
          CrossMgAdmob.Current.Rewarded -= OnRewarded;
       }
 
+      private void OnRewardedVideoAdImpression(object sender, EventArgs e)
+      {
+         Debug.WriteLine("--------> OnRewardedVideoAdImpression");
+      }
 
-      private void OnRewarded(object sender, MgAdmobEventArgs e)
+      private void OnRewarded(object sender, MgRewardEventArgs e)
       {
          Debug.WriteLine($"--------> OnRewarded: RewardType = {e.RewardType}, RewardAmount = {e.RewardAmount}");
       }
@@ -112,15 +115,15 @@ namespace MgAdmobSample
          Debug.WriteLine("--------> OnRewardedVideoAdCompleted");
       }
 
-      private void OnRewardedVideoAdFailedToLoad(object sender, MgAdmobEventArgs e)
+      private void OnRewardedVideoAdFailedToLoad(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnRewardedVideoAdFailedToLoad");
+         Debug.WriteLine($"--------> OnRewardedVideoAdFailedToLoad: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }
 
 
-      private void OnRewardedVideoAdFailedToShow(object sender, MgAdmobEventArgs e)
+      private void OnRewardedVideoAdFailedToShow(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnRewardedVideoAdFailedToShow");
+         Debug.WriteLine($"--------> OnRewardedVideoAdFailedToShow: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }
 
       private void OnRewardedVideoAdClosed(object sender, EventArgs e)
@@ -132,18 +135,18 @@ namespace MgAdmobSample
       {
          CrossMgAdmob.Current.ShowRewardedVideo();
       }
+      
 
-
-
-
-      private void OnInterstitialFailedToShow(object sender, MgAdmobEventArgs e)
+      private void OnInterstitialFailedToShow(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnInterstitialFailedToShow");
+         Debug.WriteLine($"--------> OnInterstitialFailedToShow: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
+
       }
 
-      private void OnInterstitialFailedToLoad(object sender, MgAdmobEventArgs e)
+      private void OnInterstitialFailedToLoad(object sender, MgErrorEventArgs e)
       {
-         Debug.WriteLine("--------> OnInterstitialFailedToLoad");
+         Debug.WriteLine($"--------> OnInterstitialFailedToLoad: Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
+
       }
 
       private void OnInterstitialImpression(object sender, EventArgs e)
@@ -167,7 +170,6 @@ namespace MgAdmobSample
       }
 
       
-
       protected override void OnStart()
       {
          BindAdMobEvents();

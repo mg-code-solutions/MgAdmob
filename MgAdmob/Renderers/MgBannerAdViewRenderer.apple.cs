@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Google.MobileAds;
 using Plugin.MgAdmob.Controls;
 using Plugin.MgAdmob.EventArgs;
+using Plugin.MgAdmob.Implementations;
 using Plugin.MgAdmob.Renderers;
 using UIKit;
 using Xamarin.Forms;
@@ -39,14 +40,37 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
       {
          return;
       }
-      
+
+      var adUnitId = !string.IsNullOrEmpty(Element.AdUnitId) && !string.IsNullOrWhiteSpace(Element.AdUnitId)
+         ? Element.AdUnitId
+         : !string.IsNullOrEmpty(CrossMgAdmob.Current.AdUnitId) && !string.IsNullOrWhiteSpace(CrossMgAdmob.Current.AdUnitId)
+            ? CrossMgAdmob.Current.AdUnitId
+            : null;
+
+      if (adUnitId == null)
+      {
+         var msg = string
+            .Format
+            (
+               "Either {0}.{1} or {2}.{3}.{4} must be set before displaying an Ad",
+               nameof(MgBannerAdView),
+               nameof(MgBannerAdView.AdUnitId),
+               nameof(CrossMgAdmob),
+               nameof(CrossMgAdmob.Current),
+               nameof(CrossMgAdmob.Current.AdUnitId)
+            );
+
+         throw new ApplicationException(msg);
+      }
+
+
       var width = (int)Math.Min(Element.Width, UIScreen.MainScreen.Bounds.Size.Width);
 
       System.Diagnostics.Debug.WriteLine($"---------> {nameof(MgBannerAdViewRenderer)}.{nameof(CreateView)}(): width = {width}, {Element.Width}, {UIScreen.MainScreen.Bounds.Size.Width}");
 
       _bannerView = new BannerView
       {
-         AdUnitId = Element.AdUnitId,
+         AdUnitId = adUnitId,
          AdSize = AdSizeCons.GetCurrentOrientationAnchoredAdaptiveBannerAdSize(width),
          RootViewController = _controller
       };
@@ -60,7 +84,7 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
             .OnAdFailedToLoad
             (
                sender,
-               new MgAdmobEventArgs
+               new MgErrorEventArgs
                {
                   ErrorCode = (int)args.Error.Code,
                   ErrorMessage = args.Error.LocalizedDescription,
@@ -76,60 +100,7 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
 
       _bannerView.LoadRequest(request);
    }
-   /*
-   private void CreateNativeControl(UIViewController controller, MgBannerAdView mgBannerAdView, string adUnitId, bool needToRefreshAdView)
-   {
-      if (!CrossMgAdmob.Current.IsEnabled)
-      {
-         return;
-      }
-
-      if (_bannerView != null && !needToRefreshAdView)
-      {
-         return;
-      }
-
-      _adUnitId = !string.IsNullOrEmpty(adUnitId) 
-         ? adUnitId 
-         : CrossMgAdmob.Current.AdUnitId;
-
-      if (string.IsNullOrEmpty(_adUnitId))
-      {
-         Console.WriteLine($"You must set the {nameof(MgBannerAdView.AdUnitId)} before using it");
-      }
-
-      _bannerView = new BannerView(AdSizeCons.SmartBannerPortrait, new CGPoint(0, UIScreen.MainScreen.Bounds.Size.Height - AdSizeCons.Banner.Size.Height))
-      {
-         AdUnitId = _adUnitId,
-         RootViewController = controller
-      };
-
-      _bannerView.AdReceived += mgBannerAdView.OnAdLoaded;
-      _bannerView.ClickRecorded += mgBannerAdView.OnAdClicked;
-      _bannerView.ImpressionRecorded += mgBannerAdView.OnAdImpression;
-      
-      _bannerView.ReceiveAdFailed += (sender, args) =>
-         mgBannerAdView
-            .OnAdFailedToLoad
-            (
-               sender,
-               new MgAdmobEventArgs
-               {
-                  ErrorCode = (int)args.Error.Code, ErrorMessage = args.Error.LocalizedDescription,
-                  ErrorDomain = args.Error.Domain
-               }
-            );
-
-      _bannerView.ScreenDismissed += mgBannerAdView.OnAdClosed;
-      _bannerView.WillPresentScreen += mgBannerAdView.OnAdOpened;
-
-      
-      var request = MgAdmobImplementation.GetRequest();
-
-      _bannerView.LoadRequest(request);
-   }
-   */
-
+   
    protected override void OnElementChanged(ElementChangedEventArgs<MgBannerAdView> e)
    {
       base.OnElementChanged(e);
@@ -198,81 +169,7 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
 
       return rootController.PresentedViewController;
    }
-
-   /*
-   private static UIViewController GetVisibleViewController()
-   {
-      var rootController = UIApplication.SharedApplication.Delegate?.GetWindow()?.RootViewController;
-
-      if (rootController == null)
-      {
-         return null;
-      }
-
-      if (rootController.PresentedViewController == null)
-      {
-         return rootController;
-      }
-
-      if (rootController.PresentedViewController is UINavigationController controller)
-      {
-         return controller.VisibleViewController;
-      }
-
-      if (rootController.PresentedViewController is UITabBarController barController)
-      {
-         return barController.SelectedViewController;
-      }
-
-      return rootController.PresentedViewController;
-   }
-   */
-
-   /*
-   protected override void OnElementChanged(ElementChangedEventArgs<MgBannerAdView> e)
-   {
-      base.OnElementChanged(e);
-
-      if (!CrossMgAdmob.Current.IsEnabled)
-      {
-         return;
-      }
-
-      if (_bannerView != null)
-      {
-         return;
-      }
-
-      if (Control != null)
-      {
-         return;
-      }
-
-      var controller = GetVisibleViewController();
-
-      if (controller == null)
-      {
-         return;
-      }
-
-      if (e.NewElement != null)
-      {
-         CreateNativeControl(controller, e.NewElement, e.NewElement.AdUnitId, false);
-      }
-      else if (e.OldElement != null)
-      {
-         CreateNativeControl(controller, e.OldElement, e.OldElement.AdUnitId, true);
-      }
-      else
-      {
-         return;
-      }
-
-      SetNativeControl(_bannerView);
-   }
-   */
-
-
+   
    protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
    {
       base.OnElementPropertyChanged(sender, e);
@@ -306,12 +203,41 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
          return;
       }
 
-      if (e.PropertyName == nameof(MgBannerAdView.AdUnitId) && Control != null)
+      if (Control == null)
       {
-         Control.AdUnitId = Element.AdUnitId;
-
-         System.Diagnostics.Debug.WriteLine($"---------> {nameof(MgBannerAdViewRenderer)}.{nameof(OnElementPropertyChanged)}(): Control.AdUnitId = {Control.AdUnitId}");
+         return;
       }
+
+      if (e.PropertyName != nameof(MgBannerAdView.AdUnitId))
+      {
+         return;
+      }
+
+      var adUnitId = !string.IsNullOrEmpty(Element.AdUnitId) && !string.IsNullOrWhiteSpace(Element.AdUnitId)
+         ? Element.AdUnitId
+         : !string.IsNullOrEmpty(CrossMgAdmob.Current.AdUnitId) && !string.IsNullOrWhiteSpace(CrossMgAdmob.Current.AdUnitId)
+            ? CrossMgAdmob.Current.AdUnitId
+            : null;
+
+      if (adUnitId == null)
+      {
+         var msg = string
+            .Format
+            (
+               "Either {0}.{1} or {2}.{3}.{4} must be set before displaying an Ad",
+               nameof(MgBannerAdView),
+               nameof(MgBannerAdView.AdUnitId),
+               nameof(CrossMgAdmob),
+               nameof(CrossMgAdmob.Current),
+               nameof(CrossMgAdmob.Current.AdUnitId)
+            );
+
+         throw new ApplicationException(msg);
+      }
+
+      Control.AdUnitId = adUnitId;
+
+      System.Diagnostics.Debug.WriteLine($"---------> {nameof(MgBannerAdViewRenderer)}.{nameof(OnElementPropertyChanged)}(): Control.AdUnitId = {Control.AdUnitId}");
    }
 }
 

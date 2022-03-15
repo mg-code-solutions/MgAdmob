@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Plugin.MgAdmob.Enums;
 using Plugin.MgAdmob.EventArgs;
+using Plugin.MgAdmob.Rewarded;
 
 namespace Plugin.MgAdmob.Interfaces;
 
@@ -9,7 +10,7 @@ public interface IMgAdmob
 {
    bool IsEnabled { get; set; }
    string AdUnitId { get; set; }
-   bool UsePersonalizedAds { get; set; }
+   bool UsePersonalisedAds { get; set; }
    bool UseRestrictedDataProcessing { get; set; }
    bool ComplyWithFamilyPolicies { get; set; }
    MgTagForChildDirectedTreatment TagForChildDirectedTreatment { get; set; }
@@ -17,11 +18,11 @@ public interface IMgAdmob
    MgMaxAdContentRating MaxAdContentRating { get; set; }
    List<string> TestDevices { get; set; }
 
-   bool IsInterstitialLoaded();
+   bool IsInterstitialLoaded { get; }
    void LoadInterstitial(string adUnitId);
    void ShowInterstitial();
-   bool IsRewardedVideoLoaded();
-   public void LoadRewardedVideo(string adUnitId, MgRewardedAdOptions options = null);
+   bool IsRewardedVideoLoaded { get; }
+   public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/);
    void ShowRewardedVideo();
    string GetAdContentRatingString();
    
@@ -29,13 +30,13 @@ public interface IMgAdmob
    event EventHandler InterstitialOpened;
    event EventHandler InterstitialClosed;
    event EventHandler InterstitialImpression;
-   event EventHandler<MgAdmobEventArgs> InterstitialFailedToShow;
-   event EventHandler<MgAdmobEventArgs> InterstitialFailedToLoad;
+   event EventHandler<MgErrorEventArgs> InterstitialFailedToShow;
+   event EventHandler<MgErrorEventArgs> InterstitialFailedToLoad;
 
-   event EventHandler<MgAdmobEventArgs> Rewarded;
+   event EventHandler<MgRewardEventArgs> Rewarded;
    event EventHandler RewardedVideoAdClosed;
-   event EventHandler<MgAdmobEventArgs> RewardedVideoAdFailedToLoad;
-   event EventHandler<MgAdmobEventArgs> RewardedVideoAdFailedToShow;
+   event EventHandler<MgErrorEventArgs> RewardedVideoAdFailedToLoad;
+   event EventHandler<MgErrorEventArgs> RewardedVideoAdFailedToShow;
    event EventHandler RewardedVideoAdLeftApplication;
    event EventHandler RewardedVideoAdLoaded;
    event EventHandler RewardedVideoAdOpened;

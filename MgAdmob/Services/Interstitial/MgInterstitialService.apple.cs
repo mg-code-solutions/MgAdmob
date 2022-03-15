@@ -1,16 +1,17 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Implementations;
 using UIKit;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Interstitial;
 
-internal class InterstitialService
+internal class MgInterstitialService
 {
    private InterstitialAd _interstitialAd;
    private readonly MgAdmobImplementation _implementation;
 
-   public InterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
@@ -98,9 +99,9 @@ internal class InterstitialService
          return;
       }
 
-      if (!IsLoaded())
+      if (!IsLoaded)
       {
-         throw new ApplicationException("Interstitial Ad not loaded, call LoadInterstitial() first");
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;
@@ -117,11 +118,6 @@ internal class InterstitialService
       }
    }
 
-   internal bool IsLoaded()
-   {
-      return _interstitialAd != null;
-   }
-
-
+   public bool IsLoaded => _interstitialAd != null;
 }
 

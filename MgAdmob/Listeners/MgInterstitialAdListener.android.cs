@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Android.Gms.Ads;
 
 namespace Plugin.MgAdmob.Listeners;
 
-public class InterstitialAdListener : AdListener
+public class MgInterstitialAdListener : AdListener
 {
    public event EventHandler AdLoaded;
    public event EventHandler AdOpened;

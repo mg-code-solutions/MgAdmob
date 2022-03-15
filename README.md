@@ -2,6 +2,8 @@
 
 Utilise Google Admob Ads (banners, interstitial, and rewarded videos) in your Xamarin Projects (Android and iOS)
 
+Originally based on the [MtAdmob](https://github.com/marcojak/MTAdmob) project
+
 ## Setup
 * Available on Nuget: https://www.nuget.org/packages/Plugin.MgAdmob/
 * Install in your .NetStandard project and Android/iOS projects
@@ -10,17 +12,13 @@ Utilise Google Admob Ads (banners, interstitial, and rewarded videos) in your Xa
 * Xamarin.Android
 * Xamarin.iOS
 
-## How to use MgAdmob
+## How to Use MgAdMob Banner Ads
 
- TODO
-
-### To add a banner in your project
-
-Two options are available for adding banner ads to your app
+There are two options available for adding banner ads to your app
 
 #### 1) XAML
 
-Remember to replace ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy with your Ad Unit Id from Google Admob
+Remember to replace **ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy** with your Ad Unit Id from **Google Admob**
 
 ```csharp
 <controls:MgAdView AdUnitId="ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy"/>
@@ -31,7 +29,7 @@ Add this line in your XAML:
 xmlns:controls="clr-namespace:Plugin.MgAdmob.Controls;assembly=Plugin.MgAdmob"
 ```
 
-Banner Ids can be customised for Android and iOS, use the OnPlatform-Property as shown in the example below (test Ad Unit Ids shown below):
+MgBannerAdView AdUnitId can be customised for Android and iOS by using the OnPlatform tag as shown in the example below (test Ad Unit Ids shown):
 ```csharp
 <controls:MgBannerAdView 	
 	AdUnitId="{OnPlatform Android='ca-app-pub-3940256099942544/6300978111', iOS='ca-app-pub-3940256099942544/2934735716'}"
@@ -40,14 +38,58 @@ Banner Ids can be customised for Android and iOS, use the OnPlatform-Property as
 
 Alternatively, for all banners in your app you can set the AdUnitId property via a <Style> entry in App.xaml (similar to HeightRequest as explained below)
 
+### Styling the MgBannerAdView control in App.xaml
+
+**NB: Banner ads are somewhat particular about their sizing. If banners ads are not displaying, try defaulting the HeightRequest by adding the following style you your App.xaml:**
+
+```csharp
+<Style TargetType="MgBannerAdView">
+    <Setter Property="HeightRequest">
+        <Setter.Value>
+            <x:OnIdiom Phone="60" Tablet="90"/>
+        </Setter.Value>
+    </Setter>
+</Style>
+```
+
 #### 2) Code
 ```csharp
 MgBannerAdView ads = new MgBannerAdView();
 ```
 
-### Ad Unit Ids
+## How to Use MgAdMob Full Screen Ads
+	
+### Interstitial ads
 
-When testing, use the following Ad Unit Ids, provided by Google. When releasing to production, replace the test Ad Unit Ids with your own Ids:
+To load an Interstitial Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
+```csharp
+CrossMgAdmob.Current.LoadInterstitial("xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx");
+```
+
+Once loaded, an Interstitial Ad can be displayed as shown below:
+```csharp
+CrossMgAdmob.Current.ShowInterstitial();
+```
+
+**NB: Intersitial Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
+
+### Rewarded video ads
+
+To load a Reqard Video Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
+```csharp
+CrossMgAdmob.Current.LoadRewardedVideo("xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx");
+```
+
+Once loaded, a Rewarded Video Ad can be displayed as shown below:
+```csharp
+CrossMgAdmob.Current.ShowRewardedVideo();
+```
+
+**NB: Reward Video Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
+
+## Ad Unit Ids
+
+When testing, use the following Ad Unit Ids, provided by Google. When releasing to production, replace the test Ad Unit Ids with your own Ids from **Google AdMob**:
 
 #### Banner Ad Test Ids
 
@@ -63,25 +105,11 @@ Android: ca-app-pub-3940256099942544/1033173712
 iOS: ca-app-pub-3940256099942544/4411468910
 ```
 
-#### Interstitial Ad Test Ids
+#### Rewarded Video Ad Test Ids
 
 ```csharp
 Android: ca-app-pub-3940256099942544/5224354917
-iOS: ca-app-pub-3940256099942544/6978759866
-```
-
-## Styling the MgBannerAdView control in App.xaml
-
-** NB: Banner ads are somewhat particular about their sizing. If banners ads are not displaying, try defaulting the HeightRequest by adding the following style you your app.xaml:**
-
-```csharp
-<Style TargetType="MgBannerAdView">
-    <Setter Property="HeightRequest">
-        <Setter.Value>
-            <x:OnIdiom Phone="60" Tablet="90"/>
-        </Setter.Value>
-    </Setter>
-</Style>
+iOS: ca-app-pub-3940256099942544/1712485313
 ```
 
 ## Properties
@@ -130,7 +158,7 @@ Global properties can be used as shown below:
 CrossMgAdmob.Current.TagForChildDirectedTreatment = MgTagForChildDirectedTreatment.TreatmentUnspecified;
 CrossMgAdmob.Current.TagForUnderAgeOfConsent = MgTagForUnderAgeOfConsent.ConsentUnspecified;
 CrossMgAdmob.Current.MaxAdContentRating = MgMaxAdContentRating.RatingG;
-CrossMgAdmob.Current.UsePersonalizedAds = false;
+CrossMgAdmob.Current.UsePersonalisedAds = false;
 CrossMgAdmob.Current.ComplyWithFamilyPolicies = true;
 CrossMgAdmob.Current.UseRestrictedDataProcessing = true;
 ```
@@ -142,36 +170,6 @@ MgBannerAdView allows you to set the Ad Unit Id to specify the ads to load:
 #### AdUnitId
 	
 (default: null): Set this to the Ad Unit Id from Google AdMob
-
-## How to Use MgAdMob Full Screen Ads
-	
-### Interstitial ads
-
-To load an Interstitial Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
-```csharp
-CrossMgAdmob.Current.LoadInterstitial("xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx");
-```
-
-Once loaded, an Interstitial Ad can be displayed as shown below:
-```csharp
-CrossMgAdmob.Current.ShowInterstitial();
-```
-
-**NB: Intersitial Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
-
-### Rewarded video ads
-
-To load a Reqard Video Ad, use the following (replacing xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx with your Ad Unit Id from Google Admob):
-```csharp
-CrossMgAdmob.Current.LoadRewardedVideo("xx-xxx-xxx-xxxxxxxxxxxxxxxxx/xxxxxxxxxx");
-```
-
-Once loaded, a Rewarded Video Ad can be displayed as shown below:
-```csharp
-CrossMgAdmob.Current.ShowRewardedVideo();
-```
-
-**NB: Reward Video Ads may take some time to load: to avoid UX delays, load the ad early in the program flow and then show the ad at the appropriate time later**
 
 ## Events
 	
@@ -190,25 +188,26 @@ AdLoaded
 
 ```csharp
 InterstitialLoaded
-InterstitialClosed
 InterstitialOpened
+InterstitialClosed
 InterstitialImpression
-InterstitialFailedToLoad
 InterstitialFailedToShow
+InterstitialFailedToLoad
 ```
 
 ### Rewarded Video Ads
 
 ```csharp
-RewardedVideoAdLoaded
+Rewarded
 RewardedVideoAdClosed
 RewardedVideoAdFailedToLoad
 RewardedVideoAdFailedToShow
-RewardedVideoAdCompleted
 RewardedVideoAdLeftApplication
+RewardedVideoAdLoaded
 RewardedVideoAdOpened
 RewardedVideoStarted
-Rewarded
+RewardedVideoAdCompleted
+RewardedVideoAdImpression
 ```
 
 ## Important Configuration

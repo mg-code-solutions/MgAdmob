@@ -10,10 +10,10 @@
 		<PackageId>Plugin.MgAdmob</PackageId>
 
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
-		<AssemblyVersion>0.0.1.0</AssemblyVersion>
-		<AssemblyFileVersion>0.0.1.0</AssemblyFileVersion>
-		<Version>0.0.1</Version>
-		<PackageVersion>0.0.1.0</PackageVersion>
+		<AssemblyVersion>0.0.2.0</AssemblyVersion>
+		<AssemblyFileVersion>0.0.2.0</AssemblyFileVersion>
+		<Version>0.0.2</Version>
+		<PackageVersion>0.0.2.0</PackageVersion>
 
 
 
@@ -89,7 +89,8 @@
 		<PackageReference Include="Xamarin.Google.iOS.MobileAds" Version="8.13.0" />
 	</ItemGroup>
 	
-	
+
+
 	<ItemGroup>
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
 	</ItemGroup>

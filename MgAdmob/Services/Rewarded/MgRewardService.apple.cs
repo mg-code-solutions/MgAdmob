@@ -1,25 +1,24 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Rewarded;
 using UIKit;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Rewarded;
 
-internal class RewardService
+internal class MgRewardService
 {
    private readonly MgAdmobImplementation _implementation;
    private RewardedAd _rewardedAd;
 
-   public RewardService(MgAdmobImplementation implementation)
+   public MgRewardService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
 
    }
 
-   public bool IsLoaded()
-   {
-      return _rewardedAd != null;
-   }
+   public bool IsLoaded => _rewardedAd != null;
 
 
    private void CreateRewardAd(string adUnitId)
@@ -40,12 +39,14 @@ internal class RewardService
       {
          _implementation.OnRewardedVideoAdFailedToLoad(error);
 
+         _rewardedAd = null;
+
          return;
       }
 
       _rewardedAd = rewardedAd;
 
-      if (rewardedAd == null)
+      if (!IsLoaded)
       {
          return;
       }
@@ -56,6 +57,14 @@ internal class RewardService
       _rewardedAd.RecordedImpression += RewardedAdOnRecordedImpression;
 
       _implementation.OnRewardedVideoAdLoaded();
+   }
+   
+   private void UnbindRewardEvents()
+   {
+      _rewardedAd.DismissedContent -= RewardedAdOnDismissedContent;
+      _rewardedAd.FailedToPresentContent -= RewardedAdOnFailedToPresentContent;
+      _rewardedAd.PresentedContent -= RewardedAdOnPresentedContent;
+      _rewardedAd.RecordedImpression -= RewardedAdOnRecordedImpression;
    }
 
    private void RewardedAdOnRecordedImpression(object sender, System.EventArgs e)
@@ -78,15 +87,7 @@ internal class RewardService
 
       _rewardedAd = null;
    }
-
-   private void UnbindRewardEvents()
-   {
-      _rewardedAd.DismissedContent -= RewardedAdOnDismissedContent;
-      _rewardedAd.FailedToPresentContent -= RewardedAdOnFailedToPresentContent;
-      _rewardedAd.PresentedContent -= RewardedAdOnPresentedContent;
-      _rewardedAd.RecordedImpression -= RewardedAdOnRecordedImpression;
-   }
-
+   
    private void RewardedAdOnDismissedContent(object sender, System.EventArgs e)
    {
       _implementation.OnRewardedVideoAdClosed();
@@ -96,7 +97,7 @@ internal class RewardService
       _rewardedAd = null;
    }
 
-   public void LoadRewardedVideo(string adUnitId, MgRewardedAdOptions options = null)
+   public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/)
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -113,9 +114,9 @@ internal class RewardService
          return;
       }
 
-      if (!IsLoaded())
+      if (!IsLoaded)
       {
-         throw new ApplicationException("RewardAd not loaded, call LoadRewardedVideo()");
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardedVideo)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;
