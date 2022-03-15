@@ -6,10 +6,12 @@ using Google.MobileAds;
 using Plugin.MgAdmob.Enums;
 using Plugin.MgAdmob.EventArgs;
 using Plugin.MgAdmob.Interfaces;
-using Plugin.MgAdmob.Services;
+using Plugin.MgAdmob.Rewarded;
+using Plugin.MgAdmob.Services.Interstitial;
+using Plugin.MgAdmob.Services.Rewarded;
 
 
-namespace Plugin.MgAdmob;
+namespace Plugin.MgAdmob.Implementations;
 
 public class MgAdmobImplementation : IMgAdmob
 {
@@ -17,14 +19,14 @@ public class MgAdmobImplementation : IMgAdmob
    public event EventHandler InterstitialOpened;
    public event EventHandler InterstitialClosed;
    public event EventHandler InterstitialImpression;
-   public event EventHandler<MgAdmobEventArgs> InterstitialFailedToShow;
-   public event EventHandler<MgAdmobEventArgs> InterstitialFailedToLoad;
+   public event EventHandler<MgErrorEventArgs> InterstitialFailedToShow;
+   public event EventHandler<MgErrorEventArgs> InterstitialFailedToLoad;
 
 
-   public event EventHandler<MgAdmobEventArgs> Rewarded;
+   public event EventHandler<MgRewardEventArgs> Rewarded;
    public event EventHandler RewardedVideoAdClosed;
-   public event EventHandler<MgAdmobEventArgs> RewardedVideoAdFailedToLoad;
-   public event EventHandler<MgAdmobEventArgs> RewardedVideoAdFailedToShow;
+   public event EventHandler<MgErrorEventArgs> RewardedVideoAdFailedToLoad;
+   public event EventHandler<MgErrorEventArgs> RewardedVideoAdFailedToShow;
    public event EventHandler RewardedVideoAdLeftApplication;
    public event EventHandler RewardedVideoAdLoaded;
    public event EventHandler RewardedVideoAdOpened;
@@ -37,44 +39,39 @@ public class MgAdmobImplementation : IMgAdmob
    public virtual void OnInterstitialOpened() => InterstitialOpened?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnInterstitialClosed() => InterstitialClosed?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnInterstitialImpression() => InterstitialImpression?.Invoke(this, System.EventArgs.Empty);
-   public virtual void OnInterstitialFailedToShow(NSError error) => InterstitialFailedToShow?.Invoke(this, new MgAdmobEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
-   public virtual void OnInterstitialFailedToLoad(NSError error) => InterstitialFailedToLoad?.Invoke(this, new MgAdmobEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
+   public virtual void OnInterstitialFailedToShow(NSError error) => InterstitialFailedToShow?.Invoke(this, new MgErrorEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
+   public virtual void OnInterstitialFailedToLoad(NSError error) => InterstitialFailedToLoad?.Invoke(this, new MgErrorEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
 
 
    public virtual void OnRewardedVideoAdLoaded() => RewardedVideoAdLoaded?.Invoke(this, System.EventArgs.Empty);
-   public virtual void OnRewarded(AdReward adReward) => Rewarded?.Invoke(this, new MgAdmobEventArgs { RewardAmount = adReward.Amount.DoubleValue, RewardType = adReward.Type });
+   public virtual void OnRewarded(AdReward adReward) => Rewarded?.Invoke(this, new MgRewardEventArgs { RewardAmount = adReward.Amount.DoubleValue, RewardType = adReward.Type });
    public virtual void OnRewardedVideoAdClosed() => RewardedVideoAdClosed?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnRewardedVideoAdCompleted() => RewardedVideoAdCompleted?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnRewardedVideoAdImpression() => RewardedVideoAdImpression?.Invoke(this, System.EventArgs.Empty);
-   public virtual void OnRewardedVideoAdFailedToLoad(NSError error) => RewardedVideoAdFailedToLoad?.Invoke(this, new MgAdmobEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
-   public virtual void OnRewardedVideoAdFailedToShow(NSError error) => RewardedVideoAdFailedToShow?.Invoke(this, new MgAdmobEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
+   public virtual void OnRewardedVideoAdFailedToLoad(NSError error) => RewardedVideoAdFailedToLoad?.Invoke(this, new MgErrorEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
+   public virtual void OnRewardedVideoAdFailedToShow(NSError error) => RewardedVideoAdFailedToShow?.Invoke(this, new MgErrorEventArgs { ErrorCode = (int)error.Code, ErrorDomain = error.Domain, ErrorMessage = error.LocalizedDescription });
    public virtual void OnRewardedVideoAdOpened() => RewardedVideoAdOpened?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnRewardedVideoStarted() => RewardedVideoStarted?.Invoke(this, System.EventArgs.Empty);
    public virtual void OnRewardedVideoAdLeftApplication() => RewardedVideoAdLeftApplication?.Invoke(this, System.EventArgs.Empty);
 
    public bool IsEnabled { get; set; } = true;
    public string AdUnitId { get; set; }
-   public bool UsePersonalizedAds { get; set; } = false;
+   public bool UsePersonalisedAds { get; set; } = false;
    public bool UseRestrictedDataProcessing { get; set; } = true;
    public bool ComplyWithFamilyPolicies { get; set; } = true;
-
    public MgTagForChildDirectedTreatment TagForChildDirectedTreatment { get; set; } = MgTagForChildDirectedTreatment.TreatmentUnspecified;
-
    public MgTagForUnderAgeOfConsent TagForUnderAgeOfConsent { get; set; } = MgTagForUnderAgeOfConsent.ConsentUnspecified;
    public MgMaxAdContentRating MaxAdContentRating { get; set; } = MgMaxAdContentRating.RatingG;
    public List<string> TestDevices { get; set; }
 
 
-   private readonly InterstitialService _interstitialService;
-   private readonly RewardService _rewardService;
-
-   //private InterstitialAd _adInterstitial;
-
-
+   private readonly MgInterstitialService _interstitialService;
+   private readonly MgRewardService _rewardService;
+   
    public MgAdmobImplementation()
    {
-      _interstitialService = new InterstitialService(this);
-      _rewardService = new RewardService(this);
+      _interstitialService = new MgInterstitialService(this);
+      _rewardService = new MgRewardService(this);
    }
 
    public static Request GetRequest()
@@ -94,7 +91,7 @@ public class MgAdmobImplementation : IMgAdmob
          MobileAds.SharedInstance.RequestConfiguration.TestDeviceIdentifiers = CrossMgAdmob.Current.TestDevices.ToArray();
       }
 
-      if (!CrossMgAdmob.Current.UsePersonalizedAds)
+      if (!CrossMgAdmob.Current.UsePersonalisedAds)
       {
          dict.Add(new NSString("npa"), new NSString("1"));
 
@@ -150,9 +147,9 @@ public class MgAdmobImplementation : IMgAdmob
       return _rewardService.IsLoaded();
    }
 
-   public void LoadRewardedVideo(string adUnitId, MgRewardedAdOptions options = null)
+   public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/)
    {
-      _rewardService.LoadRewardedVideo(adUnitId, options);
+      _rewardService.LoadRewardedVideo(adUnitId/*, options*/);
    }
 
    public void ShowRewardedVideo()

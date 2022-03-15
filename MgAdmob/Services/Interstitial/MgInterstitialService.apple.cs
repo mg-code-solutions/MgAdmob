@@ -1,16 +1,17 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Implementations;
 using UIKit;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Interstitial;
 
-internal class InterstitialService
+internal class MgInterstitialService
 {
    private InterstitialAd _interstitialAd;
    private readonly MgAdmobImplementation _implementation;
 
-   public InterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }

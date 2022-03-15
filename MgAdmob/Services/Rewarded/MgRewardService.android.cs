@@ -2,16 +2,17 @@
 using Android.Gms.Ads;
 using Android.Gms.Ads.Hack;
 using Android.Gms.Ads.Rewarded;
+using Plugin.MgAdmob.Implementations;
 using Xamarin.Forms.Platform.Android;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Rewarded;
 
-   public class RewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener
+   public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener
    {
       private RewardedAd _rewardedAd;
       private readonly MgAdmobImplementation _implementation;
 
-      public RewardService(MgAdmobImplementation implementation)
+      public MgRewardService(MgAdmobImplementation implementation)
       {
          _implementation = implementation;
       }
@@ -78,7 +79,7 @@ namespace Plugin.MgAdmob.Services;
 
          _rewardedAd = rewardedAd;
 
-         _rewardedAd.FullScreenContentCallback = new MgFullScreenContentCallback(_implementation, false);
+         _rewardedAd.FullScreenContentCallback = new MgRewardedFullScreenContentCallback(_implementation);
 
          _implementation.OnRewardedVideoAdLoaded();
       }

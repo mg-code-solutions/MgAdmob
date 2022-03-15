@@ -1,4 +1,4 @@
-﻿namespace Plugin.MgAdmob;
+﻿namespace Plugin.MgAdmob.Rewarded;
 
 public class MgRewardedAdOptions
 {

@@ -89,7 +89,8 @@
 		<PackageReference Include="Xamarin.Google.iOS.MobileAds" Version="8.13.0" />
 	</ItemGroup>
 	
-	
+
+
 	<ItemGroup>
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
 	</ItemGroup>

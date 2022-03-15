@@ -2,17 +2,18 @@
 using Android.Gms.Ads;
 using Android.Gms.Ads.Hack;
 using Android.Gms.Ads.Interstitial;
+using Plugin.MgAdmob.Implementations;
 using Xamarin.Forms.Platform.Android;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Interstitial;
 
-public class InterstitialService : MgInterstitialAdLoadCallback
+public class MgInterstitialService : MgInterstitialAdLoadCallback
 {
    private InterstitialAd _interstitialAd;
 
    private readonly MgAdmobImplementation _implementation;
 
-   public InterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
@@ -71,7 +72,7 @@ public class InterstitialService : MgInterstitialAdLoadCallback
 
       _interstitialAd = interstitialAd;
 
-      _interstitialAd.FullScreenContentCallback = new MgFullScreenContentCallback(_implementation, true);
+      _interstitialAd.FullScreenContentCallback = new MgInterstitialFullScreenContentCallback(_implementation);
       
       _implementation.OnInterstitialLoaded();
    }

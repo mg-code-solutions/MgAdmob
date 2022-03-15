@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Plugin.MgAdmob;
 using Plugin.MgAdmob.EventArgs;
 using Xamarin.Forms;
@@ -44,7 +39,7 @@ namespace MgAdmobSample
 
       }
 
-      private void MgBannerAdView_OnAdFailedToLoad(object sender, MgAdmobEventArgs e)
+      private void MgBannerAdView_OnAdFailedToLoad(object sender, MgErrorEventArgs e)
       {
          Console.WriteLine($"Code = {e.ErrorCode}: {e.ErrorMessage} ({e.ErrorDomain})");
       }

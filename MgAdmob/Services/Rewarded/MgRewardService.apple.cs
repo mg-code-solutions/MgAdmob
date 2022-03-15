@@ -1,16 +1,18 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Rewarded;
 using UIKit;
 
-namespace Plugin.MgAdmob.Services;
+namespace Plugin.MgAdmob.Services.Rewarded;
 
-internal class RewardService
+internal class MgRewardService
 {
    private readonly MgAdmobImplementation _implementation;
    private RewardedAd _rewardedAd;
 
-   public RewardService(MgAdmobImplementation implementation)
+   public MgRewardService(MgAdmobImplementation implementation)
    {
       _implementation = implementation;
 
@@ -96,7 +98,7 @@ internal class RewardService
       _rewardedAd = null;
    }
 
-   public void LoadRewardedVideo(string adUnitId, MgRewardedAdOptions options = null)
+   public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/)
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {

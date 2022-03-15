@@ -18,7 +18,7 @@ public class MgBannerAdView : View
    public event EventHandler AdClosed;
    public event EventHandler AdImpression;
    public event EventHandler AdOpened;
-   public event EventHandler<MgAdmobEventArgs> AdFailedToLoad;
+   public event EventHandler<MgErrorEventArgs> AdFailedToLoad;
    public event EventHandler AdLoaded;
 
    public void OnAdClicked(object sender, System.EventArgs e)
@@ -41,7 +41,7 @@ public class MgBannerAdView : View
       AdOpened?.Invoke(sender, e);
    }
 
-   public void OnAdFailedToLoad(object sender, MgAdmobEventArgs e)
+   public void OnAdFailedToLoad(object sender, MgErrorEventArgs e)
    {
       AdFailedToLoad?.Invoke(sender, e);
    }

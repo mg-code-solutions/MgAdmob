@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Google.MobileAds;
 using Plugin.MgAdmob.Controls;
 using Plugin.MgAdmob.EventArgs;
+using Plugin.MgAdmob.Implementations;
 using Plugin.MgAdmob.Renderers;
 using UIKit;
 using Xamarin.Forms;
@@ -60,7 +61,7 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
             .OnAdFailedToLoad
             (
                sender,
-               new MgAdmobEventArgs
+               new MgErrorEventArgs
                {
                   ErrorCode = (int)args.Error.Code,
                   ErrorMessage = args.Error.LocalizedDescription,
@@ -113,7 +114,7 @@ public class MgBannerAdViewRenderer : ViewRenderer<MgBannerAdView, BannerView>
             .OnAdFailedToLoad
             (
                sender,
-               new MgAdmobEventArgs
+               new MgErrorEventArgs
                {
                   ErrorCode = (int)args.Error.Code, ErrorMessage = args.Error.LocalizedDescription,
                   ErrorDomain = args.Error.Domain

@@ -5,6 +5,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Plugin.MgAdmob.Controls;
+using Plugin.MgAdmob.Implementations;
 using Plugin.MgAdmob.Listeners;
 using Plugin.MgAdmob.Renderers;
 using Xamarin.Forms;
