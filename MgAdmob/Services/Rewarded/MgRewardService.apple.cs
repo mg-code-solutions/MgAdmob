@@ -39,12 +39,14 @@ internal class MgRewardService
       {
          _implementation.OnRewardedVideoAdFailedToLoad(error);
 
+         _rewardedAd = null;
+
          return;
       }
 
       _rewardedAd = rewardedAd;
 
-      if (rewardedAd == null)
+      if (!IsLoaded)
       {
          return;
       }
