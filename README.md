@@ -40,7 +40,7 @@ Alternatively, for all banners in your app you can set the AdUnitId property via
 
 ### Styling the MgBannerAdView control in App.xaml
 
-**NB: Banner ads are somewhat particular about their sizing. If banners ads are not displaying, try defaulting the HeightRequest by adding the following style you your App.xaml:**
+**NB: Banner ads are somewhat particular about their sizing. If banners ads are not displaying, try defaulting the HeightRequest by adding the following style to your App.xaml:**
 
 ```csharp
 <Style TargetType="MgBannerAdView">
@@ -248,7 +248,7 @@ protected override void OnCreate(Bundle savedInstanceState)
 }
 ```
 
-Add the following to **AndroidManifest.xml** (between the **<application></application>** tags). Also remembering to replace **ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy** with your project id from Google Admob:
+Add the following to **AndroidManifest.xml** (between the **&lt;application&gt;&lt;/application&gt;** tags). Also remembering to replace **ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy** with your project id from Google Admob:
 
 ```csharp
 <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy" />
@@ -261,7 +261,7 @@ ACCESS_NETWORK_STATE
 
 INTERNET
 
-Alternative, add the following entries directly to **AndroidManifest.xml** (typically after the **<application></application>** tags):
+Alternative, add the following entries directly to **AndroidManifest.xml** (typically after the **&lt;application&gt;&lt;/application&gt;** tags):
 ```csharp
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.INTERNET" />
