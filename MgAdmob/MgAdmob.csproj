@@ -11,9 +11,9 @@
 
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
 		<AssemblyVersion>0.0.2.0</AssemblyVersion>
-		<AssemblyFileVersion>0.0.1.0</AssemblyFileVersion>
+		<AssemblyFileVersion>0.0.2.0</AssemblyFileVersion>
 		<Version>0.0.2</Version>
-		<PackageVersion>0.0.1.0</PackageVersion>
+		<PackageVersion>0.0.2.0</PackageVersion>
 
 
 
