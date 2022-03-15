@@ -1,3 +1,5 @@
 ﻿### Release Notes
+**Version 0.0.2**
+Reorganised and refactored code base, and standardised class names
 **Version 0.0.1**
 Banner ads, Interstitial ads and Reward Video ads
