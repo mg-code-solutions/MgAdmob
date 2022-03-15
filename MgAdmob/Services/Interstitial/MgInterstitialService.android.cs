@@ -55,14 +55,12 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
 
       if (!IsLoaded)
       {
-         _interstitialAd.Show(Android.App.Application.Context.GetActivity());
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
+      }
 
-         _interstitialAd = null;
-      }
-      else
-      {
-         throw new ApplicationException("Interstitial Ad not loaded, call LoadInterstitial() first");
-      }
+      _interstitialAd.Show(Android.App.Application.Context.GetActivity());
+
+      _interstitialAd = null;
    }
 
    public override void OnInterstitialAdLoaded(InterstitialAd interstitialAd)
@@ -72,10 +70,10 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       _interstitialAd = interstitialAd;
 
       _interstitialAd.FullScreenContentCallback = new MgInterstitialFullScreenContentCallback(_implementation);
-      
+
       _implementation.OnInterstitialLoaded();
    }
-   
+
    public override void OnAdFailedToLoad(LoadAdError error)
    {
       base.OnAdFailedToLoad(error);

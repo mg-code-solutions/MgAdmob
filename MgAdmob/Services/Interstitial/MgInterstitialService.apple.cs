@@ -101,7 +101,7 @@ internal class MgInterstitialService
 
       if (!IsLoaded)
       {
-         throw new ApplicationException("Interstitial Ad not loaded, call LoadInterstitial() first");
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;

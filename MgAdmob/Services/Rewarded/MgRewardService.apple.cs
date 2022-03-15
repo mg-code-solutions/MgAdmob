@@ -116,7 +116,7 @@ internal class MgRewardService
 
       if (!IsLoaded)
       {
-         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardedVideo)}()");
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardedVideo)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;
