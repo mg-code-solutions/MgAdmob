@@ -271,7 +271,7 @@ If your Ads are not being displayed in the Android Emulator, make sure the Emula
 
 [GooglePlayServicesUtil] Google Play Store is missing.
 
-### iOS:
+### iOS
 
 The Mobile Ads SDK must be initialised before use. This can be done by calling **MobileAds.SharedInstance.Start()** in the **FinishedLaunching()** method for your **AppDelegate** class:
 
