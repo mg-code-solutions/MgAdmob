@@ -1,12 +1,15 @@
 ﻿using System;
+using Plugin.MgAdmob.Enums;
 using Plugin.MgAdmob.Implementations;
 using Plugin.MgAdmob.Interfaces;
+using Plugin.MgAdmob.Services.Interstitial;
+using Plugin.MgAdmob.Services.Rewarded;
 
 namespace Plugin.MgAdmob;
 
 public static class CrossMgAdmob
 {
-   private static readonly Lazy<IMgAdmob> Implementation = new(CreateMgAdmob, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+   private static readonly Lazy<IMgAdmobImplementation> Implementation = new(CreateMgAdmob, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
    /// <summary>
    /// Gets if the plugin is supported on the current platform.
@@ -16,7 +19,7 @@ public static class CrossMgAdmob
    /// <summary>
    /// Current plugin implementation to use
    /// </summary>
-   public static IMgAdmob Current
+   public static IMgAdmobImplementation Current
    {
       get
       {
@@ -34,13 +37,18 @@ public static class CrossMgAdmob
       }
    }
 
-   private static IMgAdmob CreateMgAdmob()
+   private static IMgAdmobImplementation CreateMgAdmob()
    {
 #if NETSTANDARD1_0 || NETSTANDARD2_0
       return null;
 #else
 #pragma warning disable IDE0022 // Use expression body for methods
-      return new MgAdmobImplementation();
+      var imp = new MgAdmobImplementation();
+
+      imp.RegisterAdService(MgAdServiceType.Interstitial, new MgInterstitialService());
+      imp.RegisterAdService(MgAdServiceType.RewardVideo, new MgRewardService());
+
+      return imp;
 #pragma warning restore IDE0022 // Use expression body for methods
 #endif
    }

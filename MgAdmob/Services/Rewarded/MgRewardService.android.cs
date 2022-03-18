@@ -2,19 +2,20 @@
 using Android.Gms.Ads;
 using Android.Gms.Ads.Hack;
 using Android.Gms.Ads.Rewarded;
+using Plugin.MgAdmob.Extensions;
 using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Interfaces;
 using Xamarin.Forms.Platform.Android;
 
 namespace Plugin.MgAdmob.Services.Rewarded;
 
-public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener
+public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardListener, IMgAdService
 {
    private RewardedAd _rewardedAd;
-   private readonly MgAdmobImplementation _implementation;
+   private IMgAdmobImplementation _implementation;
 
-   public MgRewardService(MgAdmobImplementation implementation)
+   public MgRewardService()
    {
-      _implementation = implementation;
    }
 
    private void CreateRewardAd(string adUnitId)
@@ -30,7 +31,7 @@ public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardList
       MgRewardedAd.Load(context, adUnitId, requestBuilder.Build(), this);
    }
 
-   public void LoadRewardVideo(string adUnitId)
+   public void Load(string adUnitId)
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -40,9 +41,16 @@ public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardList
       CreateRewardAd(adUnitId);
    }
 
+   public void Init(IMgAdmobImplementation implementation)
+   {
+      _implementation = implementation;
+   }
+
+   public bool IsInitialised => _implementation != null;
+
    public bool IsLoaded => _rewardedAd != null;
 
-   public void ShowReward()
+   public void Show()
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -51,7 +59,12 @@ public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardList
 
       if (!IsLoaded)
       {
-         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardVideo)}() first");
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(Load)}() first");
+      }
+
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
       }
 
       _rewardedAd.Show(Android.App.Application.Context.GetActivity(), this);
@@ -62,15 +75,25 @@ public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardList
    public override void OnAdFailedToLoad(LoadAdError error)
    {
       base.OnAdFailedToLoad(error);
-
-      _implementation.OnRewardedVideoAdFailedToLoad(error);
-
+      
       _rewardedAd = null;
+
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation?.OnRewardedVideoAdFailedToLoad(error.ToMgErrorEventArgs());
    }
 
    public override void OnRewardedAdLoaded(RewardedAd rewardedAd)
    {
       base.OnRewardedAdLoaded(rewardedAd);
+
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
 
       _rewardedAd = rewardedAd;
 
@@ -81,12 +104,17 @@ public class MgRewardService : MgRewardedAdLoadCallback, IOnUserEarnedRewardList
 
       _rewardedAd.FullScreenContentCallback = new MgRewardedFullScreenContentCallback(_implementation);
 
-      _implementation.OnRewardedVideoAdLoaded();
+      _implementation?.OnRewardedVideoAdLoaded();
    }
 
    public void OnUserEarnedReward(IRewardItem rewardItem)
    {
-      _implementation.OnRewarded(rewardItem);
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnRewarded(rewardItem.ToMgRewardEventArgs());
    }
 }
 

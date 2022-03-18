@@ -1,13 +1,14 @@
 ﻿using Android.Gms.Ads;
-using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Extensions;
+using Plugin.MgAdmob.Interfaces;
 
 namespace Plugin.MgAdmob.Services.Interstitial;
 
 public class MgInterstitialFullScreenContentCallback : FullScreenContentCallback
 {
-   private readonly MgAdmobImplementation _implementation;
+   private readonly IMgAdmobImplementation _implementation;
 
-   public MgInterstitialFullScreenContentCallback(MgAdmobImplementation implementation)
+   public MgInterstitialFullScreenContentCallback(IMgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
@@ -23,7 +24,7 @@ public class MgInterstitialFullScreenContentCallback : FullScreenContentCallback
    {
       base.OnAdFailedToShowFullScreenContent(error);
 
-      _implementation.OnInterstitialFailedToShow(error);
+      _implementation.OnInterstitialFailedToShow(error.ToMgErrorEventArgs());
    }
 
    public override void OnAdShowedFullScreenContent()

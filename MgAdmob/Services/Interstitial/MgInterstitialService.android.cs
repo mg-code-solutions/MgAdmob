@@ -2,20 +2,21 @@
 using Android.Gms.Ads;
 using Android.Gms.Ads.Hack;
 using Android.Gms.Ads.Interstitial;
+using Plugin.MgAdmob.Extensions;
 using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Interfaces;
 using Xamarin.Forms.Platform.Android;
 
 namespace Plugin.MgAdmob.Services.Interstitial;
 
-public class MgInterstitialService : MgInterstitialAdLoadCallback
+public class MgInterstitialService : MgInterstitialAdLoadCallback, IMgAdService
 {
    private InterstitialAd _interstitialAd;
 
-   private readonly MgAdmobImplementation _implementation;
+   private IMgAdmobImplementation _implementation;
 
-   public MgInterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService()
    {
-      _implementation = implementation;
    }
 
    private void CreateInterstitialAd(string adUnit)
@@ -24,7 +25,7 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       {
          return;
       }
-
+      
       var context = Android.App.Application.Context;
 
       var requestBuilder = MgAdmobImplementation.GetRequest();
@@ -32,7 +33,7 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       MgInterstitialAd.Load(context, adUnit, requestBuilder.Build(), this);
    }
 
-   public void LoadInterstitial(string adUnit)
+   public void Load(string adUnit)
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -42,22 +43,34 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       CreateInterstitialAd(adUnit);
    }
 
+   public void Init(IMgAdmobImplementation implementation)
+   {
+      _implementation = implementation;
+   }
+
+   public bool IsInitialised => _implementation != null;
+
    public bool IsLoaded => _interstitialAd != null;
 
 
 
-   public void ShowInterstitial()
+   public void Show()
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
          return;
       }
 
-      if (!IsLoaded)
+      if (!IsInitialised)
       {
-         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
       }
 
+      if (!IsLoaded)
+      {
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(Load)}() first");
+      }
+      
       _interstitialAd.Show(Android.App.Application.Context.GetActivity());
 
       _interstitialAd = null;
@@ -67,6 +80,13 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
    {
       base.OnInterstitialAdLoaded(interstitialAd);
 
+      if (!IsInitialised)
+      {
+         _implementation = null;
+
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
       _interstitialAd = interstitialAd;
 
       _interstitialAd.FullScreenContentCallback = new MgInterstitialFullScreenContentCallback(_implementation);
@@ -74,13 +94,19 @@ public class MgInterstitialService : MgInterstitialAdLoadCallback
       _implementation.OnInterstitialLoaded();
    }
 
+   
    public override void OnAdFailedToLoad(LoadAdError error)
    {
       base.OnAdFailedToLoad(error);
 
-      _implementation.OnInterstitialFailedToLoad(error);
-
       _interstitialAd = null;
+
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnInterstitialFailedToLoad(error.ToMgErrorEventArgs());
    }
 }
 

@@ -1,13 +1,14 @@
 ﻿using Android.Gms.Ads;
-using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Extensions;
+using Plugin.MgAdmob.Interfaces;
 
 namespace Plugin.MgAdmob.Services.Rewarded;
 
 public class MgRewardedFullScreenContentCallback : FullScreenContentCallback
 {
-   private readonly MgAdmobImplementation _implementation;
+   private readonly IMgAdmobImplementation _implementation;
 
-   public MgRewardedFullScreenContentCallback(MgAdmobImplementation implementation)
+   public MgRewardedFullScreenContentCallback(IMgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
@@ -23,7 +24,7 @@ public class MgRewardedFullScreenContentCallback : FullScreenContentCallback
    {
       base.OnAdFailedToShowFullScreenContent(error);
 
-      _implementation.OnRewardedVideoAdFailedToShow(error);
+      _implementation.OnRewardedVideoAdFailedToShow(error.ToMgErrorEventArgs());
    }
 
    public override void OnAdShowedFullScreenContent()

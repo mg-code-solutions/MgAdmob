@@ -1,10 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using Android.Content.Res;
 using Android.Gms.Ads;
-using Android.Runtime;
-using Android.Util;
-using Android.Views;
 using Android.Widget;
 using Plugin.MgAdmob.Controls;
 using Plugin.MgAdmob.Implementations;

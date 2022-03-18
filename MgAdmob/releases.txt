@@ -1,4 +1,6 @@
 ﻿### Release Notes
+**Version 0.0.3**
+Reorganised and refactored code base (Abtracted out Ad services)
 **Version 0.0.2**
 Reorganised and refactored code base, and standardised class names
 **Version 0.0.1**

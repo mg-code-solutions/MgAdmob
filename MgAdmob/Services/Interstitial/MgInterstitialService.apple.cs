@@ -1,98 +1,32 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Extensions;
 using Plugin.MgAdmob.Implementations;
+using Plugin.MgAdmob.Interfaces;
 using UIKit;
 
 namespace Plugin.MgAdmob.Services.Interstitial;
 
-internal class MgInterstitialService
+internal class MgInterstitialService : IMgAdService
 {
    private InterstitialAd _interstitialAd;
-   private readonly MgAdmobImplementation _implementation;
+   private IMgAdmobImplementation _implementation;
 
-   public MgInterstitialService(MgAdmobImplementation implementation)
+   public MgInterstitialService()
+   {
+   }
+
+   public void Init(IMgAdmobImplementation implementation)
    {
       _implementation = implementation;
    }
 
-   public void LoadInterstitial(string adUnit)
-   {
-      if (!CrossMgAdmob.Current.IsEnabled)
-      {
-         return;
-      }
+   public bool IsInitialised => _implementation != null;
 
-      if (_interstitialAd != null)
-      {
-         _interstitialAd.DismissedContent -= InterstitialAdOnDismissedContent;
-         _interstitialAd.DismissingContent -= InterstitialAdOnDismissingContent;
-         _interstitialAd.FailedToPresentContent -= InterstitialAdOnFailedToPresentContent;
-         _interstitialAd.PresentedContent -= InterstitialAdOnPresentedContent;
-         _interstitialAd.RecordedClick -= InterstitialAdOnRecordedClick;
-         _interstitialAd.RecordedImpression -= InterstitialAdOnRecordedImpression;
+   public bool IsLoaded => _interstitialAd != null;
 
-         _interstitialAd = null;
-      }
-
-      var request = MgAdmobImplementation.GetRequest();
-
-      InterstitialAd.Load(adUnit, request, InterstitialAdCompletionHandler);
-   }
-
-   private void InterstitialAdCompletionHandler(InterstitialAd interstitialAd, NSError error)
-   {
-      if (error != null)
-      {
-         _implementation.OnInterstitialFailedToLoad(error);
-
-         _interstitialAd = null;
-
-         return;
-      }
-
-      _interstitialAd = interstitialAd;
-
-      _interstitialAd.DismissedContent += InterstitialAdOnDismissedContent;
-      _interstitialAd.DismissingContent += InterstitialAdOnDismissingContent;
-      _interstitialAd.FailedToPresentContent += InterstitialAdOnFailedToPresentContent;
-      _interstitialAd.PresentedContent += InterstitialAdOnPresentedContent;
-      _interstitialAd.RecordedClick += InterstitialAdOnRecordedClick;
-      _interstitialAd.RecordedImpression += InterstitialAdOnRecordedImpression;
-
-      _implementation.OnInterstitialLoaded();
-   }
-
-   private void InterstitialAdOnRecordedImpression(object sender, System.EventArgs e)
-   {
-      _implementation.OnInterstitialImpression();
-   }
-
-   private void InterstitialAdOnRecordedClick(object sender, System.EventArgs e)
-   {
-      Console.WriteLine("----------> InterstitialAdOnRecordedClick");
-   }
-
-   private void InterstitialAdOnPresentedContent(object sender, System.EventArgs e)
-   {
-      _implementation.OnInterstitialOpened();
-   }
-
-   private void InterstitialAdOnFailedToPresentContent(object sender, FullScreenPresentingAdWithErrorEventArgs e)
-   {
-      _implementation.OnInterstitialFailedToShow(e.Error);
-   }
-
-   private void InterstitialAdOnDismissingContent(object sender, System.EventArgs e)
-   {
-   }
-
-   private void InterstitialAdOnDismissedContent(object sender, System.EventArgs e)
-   {
-      _implementation.OnInterstitialClosed();
-   }
-
-   public void ShowInterstitial()
+   public void Show()
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -101,7 +35,7 @@ internal class MgInterstitialService
 
       if (!IsLoaded)
       {
-         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(LoadInterstitial)}() first");
+         throw new ApplicationException($"Interstitial Ad not loaded, call {nameof(Load)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;
@@ -117,7 +51,110 @@ internal class MgInterstitialService
          _interstitialAd.Present(vc);
       }
    }
+   
+   public void Load(string adUnit)
+   {
+      if (!CrossMgAdmob.Current.IsEnabled)
+      {
+         return;
+      }
 
-   public bool IsLoaded => _interstitialAd != null;
+      if (_interstitialAd != null)
+      {
+         _interstitialAd.DismissedContent -= AdOnDismissedContent;
+         _interstitialAd.DismissingContent -= AdOnDismissingContent;
+         _interstitialAd.FailedToPresentContent -= AdOnFailedToPresentContent;
+         _interstitialAd.PresentedContent -= AdOnPresentedContent;
+         _interstitialAd.RecordedClick -= AdOnRecordedClick;
+         _interstitialAd.RecordedImpression -= AdOnRecordedImpression;
+
+         _interstitialAd = null;
+      }
+
+      var request = MgAdmobImplementation.GetRequest();
+
+      InterstitialAd.Load(adUnit, request, AdCompletionHandler);
+   }
+
+
+   private void AdCompletionHandler(InterstitialAd interstitialAd, NSError error)
+   {
+      if (!IsInitialised)
+      {
+         _interstitialAd = null;
+
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      if (error != null)
+      {
+         _implementation.OnInterstitialFailedToLoad(error.ToMgErrorEventArgs());
+
+         _interstitialAd = null;
+
+         return;
+      }
+
+      _interstitialAd = interstitialAd;
+
+      _interstitialAd.DismissedContent += AdOnDismissedContent;
+      _interstitialAd.DismissingContent += AdOnDismissingContent;
+      _interstitialAd.FailedToPresentContent += AdOnFailedToPresentContent;
+      _interstitialAd.PresentedContent += AdOnPresentedContent;
+      _interstitialAd.RecordedClick += AdOnRecordedClick;
+      _interstitialAd.RecordedImpression += AdOnRecordedImpression;
+
+      _implementation.OnInterstitialLoaded();
+   }
+
+   private void AdOnRecordedImpression(object sender, System.EventArgs e)
+   {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnInterstitialImpression();
+   }
+
+   private void AdOnRecordedClick(object sender, System.EventArgs e)
+   {
+      Console.WriteLine("----------> InterstitialAdOnRecordedClick");
+   }
+
+   private void AdOnPresentedContent(object sender, System.EventArgs e)
+   {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnInterstitialOpened();
+   }
+
+   private void AdOnFailedToPresentContent(object sender, FullScreenPresentingAdWithErrorEventArgs e)
+   {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnInterstitialFailedToShow(e.Error.ToMgErrorEventArgs());
+   }
+
+   private void AdOnDismissingContent(object sender, System.EventArgs e)
+   {
+   }
+
+   private void AdOnDismissedContent(object sender, System.EventArgs e)
+   {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnInterstitialClosed();
+   }
+   
 }
 

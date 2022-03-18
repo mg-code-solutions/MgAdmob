@@ -1,23 +1,28 @@
 ﻿using System;
 using Foundation;
 using Google.MobileAds;
+using Plugin.MgAdmob.Extensions;
 using Plugin.MgAdmob.Implementations;
-using Plugin.MgAdmob.Rewarded;
+using Plugin.MgAdmob.Interfaces;
 using UIKit;
 
 namespace Plugin.MgAdmob.Services.Rewarded;
 
-internal class MgRewardService
+internal class MgRewardService : IMgAdService
 {
-   private readonly MgAdmobImplementation _implementation;
+   private IMgAdmobImplementation _implementation;
    private RewardedAd _rewardedAd;
 
-   public MgRewardService(MgAdmobImplementation implementation)
+   public MgRewardService()
    {
-      _implementation = implementation;
-
    }
 
+   public void Init(IMgAdmobImplementation implementation)
+   {
+      _implementation = implementation;
+   }
+
+   public bool IsInitialised => _implementation != null;
    public bool IsLoaded => _rewardedAd != null;
 
 
@@ -35,9 +40,14 @@ internal class MgRewardService
 
    private void CompletionHandler(RewardedAd rewardedAd, NSError error)
    {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
       if (error != null)
       {
-         _implementation.OnRewardedVideoAdFailedToLoad(error);
+         _implementation.OnRewardedVideoAdFailedToLoad(error.ToMgErrorEventArgs());
 
          _rewardedAd = null;
 
@@ -69,19 +79,34 @@ internal class MgRewardService
 
    private void RewardedAdOnRecordedImpression(object sender, System.EventArgs e)
    {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
       _implementation.OnRewardedVideoAdImpression();
    }
 
 
    private void RewardedAdOnPresentedContent(object sender, System.EventArgs e)
    {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
       _implementation.OnRewardedVideoAdOpened();
       _implementation.OnRewardedVideoAdCompleted();
    }
 
    private void RewardedAdOnFailedToPresentContent(object sender, FullScreenPresentingAdWithErrorEventArgs e)
    {
-      _implementation.OnRewardedVideoAdFailedToShow(e.Error);
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnRewardedVideoAdFailedToShow(e.Error.ToMgErrorEventArgs());
 
       UnbindRewardEvents();
 
@@ -90,6 +115,11 @@ internal class MgRewardService
    
    private void RewardedAdOnDismissedContent(object sender, System.EventArgs e)
    {
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
       _implementation.OnRewardedVideoAdClosed();
 
       UnbindRewardEvents();
@@ -97,7 +127,7 @@ internal class MgRewardService
       _rewardedAd = null;
    }
 
-   public void LoadRewardedVideo(string adUnitId/*, MgRewardedAdOptions options = null*/)
+   public void Load(string adUnitId/*, MgRewardedAdOptions options = null*/)
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -107,7 +137,7 @@ internal class MgRewardService
       CreateRewardAd(adUnitId);
    }
 
-   public void ShowRewardedVideo()
+   public void Show()
    {
       if (!CrossMgAdmob.Current.IsEnabled)
       {
@@ -116,7 +146,7 @@ internal class MgRewardService
 
       if (!IsLoaded)
       {
-         throw new ApplicationException($"Reward Ad not loaded, call {nameof(LoadRewardedVideo)}() first");
+         throw new ApplicationException($"Reward Ad not loaded, call {nameof(Load)}() first");
       }
 
       var window = UIApplication.SharedApplication.KeyWindow;
@@ -134,7 +164,12 @@ internal class MgRewardService
 
    private void UserDidEarnRewardHandler()
    {
-      _implementation.OnRewarded(_rewardedAd.AdReward);
+      if (!IsInitialised)
+      {
+         throw new ApplicationException($"Service not initialised, call {nameof(Init)}() first");
+      }
+
+      _implementation.OnRewarded(_rewardedAd.AdReward.ToMgRewardEventArgs());
    }
 }
 

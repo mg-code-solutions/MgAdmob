@@ -133,7 +133,7 @@ namespace MgAdmobSample
 
       private void OnRewardedVideoAdLoaded(object sender, EventArgs e)
       {
-         CrossMgAdmob.Current.ShowRewardedVideo();
+         CrossMgAdmob.Current.GetAdService(MgAdServiceType.RewardVideo)?.Show();
       }
       
 
@@ -166,7 +166,7 @@ namespace MgAdmobSample
 
       private void OnInterstitialLoaded(object sender, EventArgs e)
       {
-         CrossMgAdmob.Current.ShowInterstitial();
+         CrossMgAdmob.Current.GetAdService(MgAdServiceType.Interstitial)?.Show();
       }
 
       
